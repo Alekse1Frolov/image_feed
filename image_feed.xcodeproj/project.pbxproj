@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F700B2182B8B9B8100FA62B2 /* SingleImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F700B2172B8B9B8100FA62B2 /* SingleImageViewController.swift */; };
+		F736755B2B9FA75F006394E7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F736755A2B9FA75F006394E7 /* Constants.swift */; };
 		F73753D52B8B753F002019FC /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73753D42B8B753F002019FC /* ProfileViewController.swift */; };
 		F74DDBC52B89FDF8003998F4 /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74DDBC42B89FDF8003998F4 /* ImagesListCell.swift */; };
 		F7A3F2C32B7BD7A200B5A398 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A3F2C22B7BD7A200B5A398 /* AppDelegate.swift */; };
@@ -20,6 +21,7 @@
 
 /* Begin PBXFileReference section */
 		F700B2172B8B9B8100FA62B2 /* SingleImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleImageViewController.swift; sourceTree = "<group>"; };
+		F736755A2B9FA75F006394E7 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		F73753D42B8B753F002019FC /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		F74DDBC42B89FDF8003998F4 /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
 		F7A3F2BF2B7BD7A200B5A398 /* image_feed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = image_feed.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -92,6 +94,7 @@
 				F74DDBC72B89FE47003998F4 /* ImageList */,
 				F7A3F2C22B7BD7A200B5A398 /* AppDelegate.swift */,
 				F7A3F2C42B7BD7A200B5A398 /* SceneDelegate.swift */,
+				F736755A2B9FA75F006394E7 /* Constants.swift */,
 				F7A3F2C82B7BD7A200B5A398 /* Main.storyboard */,
 				F7A3F2CB2B7BD7A400B5A398 /* Assets.xcassets */,
 				F7A3F2CD2B7BD7A400B5A398 /* LaunchScreen.storyboard */,
@@ -175,6 +178,7 @@
 				F74DDBC52B89FDF8003998F4 /* ImagesListCell.swift in Sources */,
 				F73753D52B8B753F002019FC /* ProfileViewController.swift in Sources */,
 				F7A3F2C32B7BD7A200B5A398 /* AppDelegate.swift in Sources */,
+				F736755B2B9FA75F006394E7 /* Constants.swift in Sources */,
 				F700B2182B8B9B8100FA62B2 /* SingleImageViewController.swift in Sources */,
 				F7A3F2C52B7BD7A200B5A398 /* SceneDelegate.swift in Sources */,
 			);
