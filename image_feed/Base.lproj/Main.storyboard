@@ -235,6 +235,9 @@
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <segue destination="spo-ow-W2x" kind="show" identifier="ShowWebView" id="TEL-l2-Kf4"/>
+                                </connections>
                             </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="auth_logo" translatesAutoresizingMaskIntoConstraints="NO" id="yd8-vV-LJi" userLabel="Auth logo">
                                 <rect key="frame" x="166.66666666666666" y="396" width="60" height="60"/>
@@ -264,13 +267,33 @@
         <!--Web View View Controller-->
         <scene sceneID="sBn-tk-ZHH">
             <objects>
-                <viewController id="spo-ow-W2x" userLabel="Web View View Controller" sceneMemberID="viewController">
+                <viewController id="spo-ow-W2x" userLabel="Web View View Controller" customClass="WebViewViewController" customModule="image_feed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="l2E-8Z-ib1">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ToK-8E-R9N">
+                                <rect key="frame" x="0.0" y="103" width="393" height="749"/>
+                                <color key="backgroundColor" name="YP_white_color"/>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="aAX-JD-Ov3"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="ToK-8E-R9N" secondAttribute="trailing" id="200-Vi-8DR"/>
+                            <constraint firstAttribute="bottom" secondItem="ToK-8E-R9N" secondAttribute="bottom" id="22N-aH-2OL"/>
+                            <constraint firstItem="ToK-8E-R9N" firstAttribute="top" secondItem="aAX-JD-Ov3" secondAttribute="top" id="cvO-3r-eCd"/>
+                            <constraint firstItem="ToK-8E-R9N" firstAttribute="leading" secondItem="l2E-8Z-ib1" secondAttribute="leading" id="deL-gS-PPp"/>
+                        </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="1n8-Bo-Gvg"/>
+                    <connections>
+                        <outlet property="webView" destination="ToK-8E-R9N" id="ESH-my-KuA"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IZ2-Yt-skm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
