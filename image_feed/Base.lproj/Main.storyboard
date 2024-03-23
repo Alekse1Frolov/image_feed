@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="4fl-dx-7g9">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -280,18 +280,26 @@
                                     <wkPreferences key="preferences"/>
                                 </wkWebViewConfiguration>
                             </wkWebView>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="FHL-HO-IHP">
+                                <rect key="frame" x="0.0" y="103" width="393" height="4"/>
+                                <color key="progressTintColor" name="YP_black_color"/>
+                            </progressView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="aAX-JD-Ov3"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="ToK-8E-R9N" secondAttribute="trailing" id="200-Vi-8DR"/>
                             <constraint firstAttribute="bottom" secondItem="ToK-8E-R9N" secondAttribute="bottom" id="22N-aH-2OL"/>
+                            <constraint firstItem="FHL-HO-IHP" firstAttribute="top" secondItem="aAX-JD-Ov3" secondAttribute="top" id="SwD-lF-YsK"/>
+                            <constraint firstItem="FHL-HO-IHP" firstAttribute="leading" secondItem="aAX-JD-Ov3" secondAttribute="leading" id="UeU-kJ-4ao"/>
+                            <constraint firstItem="aAX-JD-Ov3" firstAttribute="trailing" secondItem="FHL-HO-IHP" secondAttribute="trailing" id="XjM-1a-JJB"/>
                             <constraint firstItem="ToK-8E-R9N" firstAttribute="top" secondItem="aAX-JD-Ov3" secondAttribute="top" id="cvO-3r-eCd"/>
                             <constraint firstItem="ToK-8E-R9N" firstAttribute="leading" secondItem="l2E-8Z-ib1" secondAttribute="leading" id="deL-gS-PPp"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="1n8-Bo-Gvg"/>
                     <connections>
+                        <outlet property="progressView" destination="FHL-HO-IHP" id="Ls9-yf-TGe"/>
                         <outlet property="webView" destination="ToK-8E-R9N" id="ESH-my-KuA"/>
                     </connections>
                 </viewController>
