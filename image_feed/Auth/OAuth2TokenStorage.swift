@@ -1,0 +1,24 @@
+//
+//  OAuth2TokenStorage.swift
+//  image_feed
+//
+//  Created by Aleksei Frolov on 03.04.2024.
+//
+
+import UIKit
+
+class OAuth2TokenStorage {
+    static let shared = OAuth2TokenStorage()
+    
+    private let userDefaults = UserDefaults.standard
+    private let tokenKey = "OAuth2Token"
+    
+    var token: String? {
+        get {
+            return userDefaults.string(forKey: tokenKey)
+        }
+        set {
+            userDefaults.set(newValue, forKey: tokenKey)
+        }
+    }
+}

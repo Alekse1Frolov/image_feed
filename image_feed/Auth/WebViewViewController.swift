@@ -16,13 +16,12 @@ protocol WebViewViewControllerDelegate: AnyObject {
 }
 
 final class WebViewViewController: UIViewController {
-
+    
     enum WebViewConstants {
         static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
     }
     
     @IBOutlet private var webView: WKWebView!
-    
     @IBOutlet private var progressView: UIProgressView!
     
     weak var delegate: WebViewViewControllerDelegate?
@@ -33,23 +32,29 @@ final class WebViewViewController: UIViewController {
     
     private func loadAuthView() {
         guard var urlComponents = URLComponents(string: WebViewConstants.unsplashAuthorizeURLString) else {
-            print("Error")
+            print("Error creating URL components")
             return
         }
         
-        urlComponents.queryItems = [
+        guard let url = urlComponents.url else {
+            print("Error creating URL from URL components")
+            return
+        }
+        
+        var components = URLComponents(url: url, resolvingAgainstBaseURL: true)
+            components?.queryItems = [
             URLQueryItem(name: "client_id", value: Constants.accessKey),
             URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
             URLQueryItem(name: "response_type", value: "code"),
             URLQueryItem(name: "scope", value: Constants.accessScope)
         ]
         
-        guard let url = urlComponents.url else {
-            print("Error")
+        guard let finalURL = components?.url else {
+            print("Error creating final URL")
             return
         }
         
-        let request = URLRequest(url: url)
+        let request = URLRequest(url: finalURL)
         webView.load(request)
     }
     
@@ -66,7 +71,6 @@ final class WebViewViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
         webView.addObserver(
             self,
             forKeyPath: #keyPath(WKWebView.estimatedProgress),
@@ -96,6 +100,7 @@ final class WebViewViewController: UIViewController {
     }
 }
 
+// MARK: - WKNavigationDelegate
 extension WebViewViewController: WKNavigationDelegate {
     
     func webView(

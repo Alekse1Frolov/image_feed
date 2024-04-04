@@ -7,23 +7,21 @@
 
 import UIKit
 
+protocol AuthViewControllerDelegate: AnyObject {
+    func didAuthenticate(_ vc: AuthViewController)
+}
+
 final class AuthViewController: UIViewController {
     
     private let showWebViewIdentifier = "ShowWebView"
     
+    private let oauth2Service = OAuth2Service.shared
+    
+    weak var delegate: AuthViewControllerDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureBackButton()
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showWebViewIdentifier {
-            guard
-                let viewController = segue.destination as? WebViewViewController else { fatalError("Failed to prepare for \(showWebViewIdentifier)") }
-            viewController.delegate = self
-        } else {
-            super.prepare(for: segue, sender: sender)
-        }
     }
     
     private func configureBackButton() {
@@ -34,13 +32,36 @@ final class AuthViewController: UIViewController {
     }
 }
 
+extension AuthViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == showWebViewIdentifier {
+            if let viewController = segue.destination as? WebViewViewController {
+                viewController.delegate = self
+            } else {
+                print("Failed to prepare for \(showWebViewIdentifier)")
+            }
+        } else {
+            super.prepare(for: segue, sender: sender)
+        }
+    }
+}
+
+// MARK: - WebViewViewControllerDelegate
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        //TODO: process code
+        vc.dismiss(animated: true)
+        
+        oauth2Service.fetchOAuthToken(with: code) { result in
+            switch result {
+            case .success:
+                self.delegate?.didAuthenticate(self)
+            case .failure(let error):
+                print("Error fetching OAuth token:", error.localizedDescription)
+            }
+        }
     }
-
+    
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         dismiss(animated: true)
     }
 }
-
