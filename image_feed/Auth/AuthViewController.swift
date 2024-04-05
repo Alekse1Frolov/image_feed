@@ -35,11 +35,11 @@ final class AuthViewController: UIViewController {
 extension AuthViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showWebViewIdentifier {
-            if let viewController = segue.destination as? WebViewViewController {
-                viewController.delegate = self
-            } else {
+            guard let viewController = segue.destination as? WebViewViewController else {
                 print("Failed to prepare for \(showWebViewIdentifier)")
+                return
             }
+            viewController.delegate = self
         } else {
             super.prepare(for: segue, sender: sender)
         }
@@ -49,7 +49,7 @@ extension AuthViewController {
 // MARK: - WebViewViewControllerDelegate
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        vc.dismiss(animated: true)
+        navigationController?.popViewController(animated: true)
         
         oauth2Service.fetchOAuthToken(with: code) { result in
             switch result {
@@ -62,6 +62,6 @@ extension AuthViewController: WebViewViewControllerDelegate {
     }
     
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
-        dismiss(animated: true)
+        navigationController?.popViewController(animated: true)
     }
 }

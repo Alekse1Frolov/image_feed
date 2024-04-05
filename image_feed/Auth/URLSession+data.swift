@@ -7,12 +7,6 @@
 
 import UIKit
 
-enum NetworkError: Error {
-    case httpStatusCode(Int)
-    case invalidResponse
-    case noData
-}
-
 extension URLSession {
     func data(for request: URLRequest,
               completion: @escaping (Result<Data, Error>) -> Void) -> URLSessionTask {

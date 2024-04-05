@@ -16,7 +16,7 @@ final class SplashViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if let _ = storage.token {
+        if storage.token != nil {
             switchToTabBarController()
         } else {
             performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
@@ -53,10 +53,7 @@ extension SplashViewController {
 
 extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(_ vc: AuthViewController) {
-        DispatchQueue.main.async {
-            vc.dismiss(animated: true)
-        }
+        navigationController?.popViewController(animated: true)
         switchToTabBarController()
     }
 }
-

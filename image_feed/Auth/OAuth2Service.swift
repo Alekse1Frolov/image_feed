@@ -9,15 +9,6 @@ import UIKit
 
 final class OAuth2Service {
     
-    struct OAuthTokenResponseBody: Codable {
-        let accessToken: String
-        let tokenType: String
-    }
-    
-    enum OAuthError: Error {
-        case invalidURL
-    }
-    
     static let shared = OAuth2Service()
     private let tokenStorage = OAuth2TokenStorage.shared
     
@@ -51,33 +42,27 @@ final class OAuth2Service {
         return request
     }
     
-    func fetchOAuthToken(with code: String, completion: @escaping (Result<Data, Error>) -> Void) {
-        
+    func fetchOAuthToken(with code: String, completion: @escaping (Result<String, Error>) -> Void) {
+
         guard let request = makeOAuthTokenRequest(code: code) else {
             completion(.failure(OAuthError.invalidURL))
             return
         }
-        
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            guard let httpResponse = response as? HTTPURLResponse else {
-                completion(.failure(NetworkError.invalidResponse))
-                return
-            }
-            
-            if 200..<300 ~= httpResponse.statusCode {
-                if let data = data {
-                    self.tokenStorage.token = String(data: data, encoding: .utf8)
-                    completion(.success(data))
-                } else {
-                    completion(.failure(NetworkError.noData))
+
+        let task = URLSession.shared.data(for: request) { result  in
+            switch result {
+            case .success(let data):
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                do {
+                    let tokenResponse = try decoder.decode(OAuthTokenResponseBody.self, from: data)
+                    let token = tokenResponse.accessToken
+                    completion(.success(token))
+                } catch {
+                    completion(.failure(OAuthError.decodingError))
                 }
-            } else {
-                completion(.failure(NetworkError.httpStatusCode(httpResponse.statusCode)))
+            case .failure(let error):
+                completion(.failure(error))
             }
         }
         task.resume()
