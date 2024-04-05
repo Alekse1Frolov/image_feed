@@ -16,7 +16,7 @@ final class OAuth2Service {
     
     func makeOAuthTokenRequest(code: String) -> URLRequest? {
         
-        guard let baseURL = URL(string: "https://unsplash.com") else {
+        guard let baseURL = Constants.baseURL else {
             print("Error creating base URL")
             return nil
         }
