@@ -52,11 +52,11 @@ extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         navigationController?.popViewController(animated: true)
         
-        ProgressHUD.show()
+        UIBlockingProgressHUD.show()
         oauth2Service.fetchOAuthToken(with: code) { [weak self] result in
             guard let self = self else { return }
             
-            ProgressHUD.dismiss()
+            UIBlockingProgressHUD.dismiss()
             
             switch result {
             case .success:
