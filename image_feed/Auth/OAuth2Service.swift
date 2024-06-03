@@ -74,6 +74,7 @@ final class OAuth2Service {
                     do {
                         let tokenResponse = try decoder.decode(OAuthTokenResponseBody.self, from: data)
                         let token = tokenResponse.accessToken
+                        self?.tokenStorage.token = token
                         completion(.success(token))
                     } catch {
                         completion(.failure(OAuthError.decodingError))

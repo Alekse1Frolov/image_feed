@@ -9,8 +9,12 @@ import UIKit
 
 final class ProfileViewController: UIViewController {
     
+    private let profileService = ProfileService.shared
+    private let tokenStorage = OAuth2TokenStorage.shared
+    
     private let avatarImageView: UIImageView = {
-        let image = UIImage(named: "avatar")
+//        let image = UIImage(named: "avatar")
+        let image = UIImage(systemName: "person.crop.circle.fill")
         let imageView = UIImageView(image: image)
         imageView.tintColor = .gray
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -19,7 +23,7 @@ final class ProfileViewController: UIViewController {
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Екатерина Новикова"
+//        label.text = "Екатерина Новикова"
         label.font = UIFont.systemFont(ofSize: 23, weight: .semibold)
         label.textColor = UIColor(named: "YP_white_color")
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -28,7 +32,7 @@ final class ProfileViewController: UIViewController {
     
     private let loginLabel: UILabel = {
         let label = UILabel()
-        label.text = "@ekaterina_now"
+//        label.text = "@ekaterina_now"
         label.font = UIFont.systemFont(ofSize: 13.0)
         label.textColor = UIColor(named: "YP_gray_color")
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -37,7 +41,7 @@ final class ProfileViewController: UIViewController {
     
     private let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "Hello, world!"
+//        label.text = "Hello, world!"
         label.font = UIFont.systemFont(ofSize: 13.0)
         label.textColor = UIColor(named: "YP_white_color")
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -60,8 +64,10 @@ final class ProfileViewController: UIViewController {
     }
     
     override func viewDidLoad() {
+       // super.viewDidLoad()
         addSubViews()
         applyConstraints()
+        fetchUserProfile()
     }
     
     private func addSubViews() {
@@ -94,6 +100,26 @@ final class ProfileViewController: UIViewController {
             logoutButton.widthAnchor.constraint(equalToConstant: 24),
             logoutButton.heightAnchor.constraint(equalToConstant: 24)
         ])
+    }
+    
+    private func fetchUserProfile() {
+        guard let token = tokenStorage.token else {
+            print("No token found")
+            return
+        }
+        
+        print("Fetching profile with token: \(token)")
+        
+        profileService.fetchProfile(token) { [weak self] result in
+            switch result {
+            case .success(let profile):
+                self?.nameLabel.text = profile.name
+                self?.loginLabel.text = profile.loginName
+                self?.descriptionLabel.text = profile.bio
+            case.failure(let error):
+                print("Failed to fetch profile: \(error)")
+            }
+        }
     }
     
     @objc
