@@ -12,6 +12,7 @@ final class ProfileService {
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
     private var lastToken: String?
+    private(set) var profile: Profile?
     
     private init() {}
     
@@ -83,6 +84,7 @@ final class ProfileService {
                     do {
                         let profileResult = try decoder.decode(ProfileResult.self, from: data)
                         let profile = Profile(profileResult: profileResult)
+                        self?.profile = profile
                         print("Profile fetched successfully: \(profile)")
                         completion(.success(profile))
                     } catch {

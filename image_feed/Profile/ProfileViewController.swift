@@ -10,7 +10,7 @@ import UIKit
 final class ProfileViewController: UIViewController {
     
     private let profileService = ProfileService.shared
-    private let tokenStorage = OAuth2TokenStorage.shared
+//    private let tokenStorage = OAuth2TokenStorage.shared
     
     private let avatarImageView: UIImageView = {
 //        let image = UIImage(named: "avatar")
@@ -64,10 +64,10 @@ final class ProfileViewController: UIViewController {
     }
     
     override func viewDidLoad() {
-       // super.viewDidLoad()
+        super.viewDidLoad()
         addSubViews()
         applyConstraints()
-        fetchUserProfile()
+        updateProfileInfo()
     }
     
     private func addSubViews() {
@@ -102,24 +102,11 @@ final class ProfileViewController: UIViewController {
         ])
     }
     
-    private func fetchUserProfile() {
-        guard let token = tokenStorage.token else {
-            print("No token found")
-            return
-        }
-        
-        print("Fetching profile with token: \(token)")
-        
-        profileService.fetchProfile(token) { [weak self] result in
-            switch result {
-            case .success(let profile):
-                self?.nameLabel.text = profile.name
-                self?.loginLabel.text = profile.loginName
-                self?.descriptionLabel.text = profile.bio
-            case.failure(let error):
-                print("Failed to fetch profile: \(error)")
-            }
-        }
+    private func updateProfileInfo() {
+        guard let profile = profileService.profile else { return }
+        nameLabel.text = profile.name
+        loginLabel.text = profile.loginName
+        descriptionLabel.text = profile.bio
     }
     
     @objc
