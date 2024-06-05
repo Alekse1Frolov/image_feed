@@ -10,6 +10,8 @@ import UIKit
 final class ProfileViewController: UIViewController {
     
     private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
+    private var profileImageServiceObserver: NSObjectProtocol?
 //    private let tokenStorage = OAuth2TokenStorage.shared
     
     private let avatarImageView: UIImageView = {
@@ -68,6 +70,17 @@ final class ProfileViewController: UIViewController {
         addSubViews()
         applyConstraints()
         updateProfileInfo()
+        
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                guard let self = self else { return }
+                self.updateAvatar()
+            }
+        updateAvatar()
     }
     
     private func addSubViews() {
@@ -107,6 +120,35 @@ final class ProfileViewController: UIViewController {
         nameLabel.text = profile.name
         loginLabel.text = profile.loginName
         descriptionLabel.text = profile.bio
+        
+        profileImageService.fetchProfileImageURL(username: profile.username) { [weak self] result in
+            switch result {
+            case .success(let imageURL):
+                self?.updateAvatarImage(with: imageURL)
+            case .failure(let error):
+                print("Failed to fetch profile image URL: \(error)")
+            }
+        }
+    }
+    
+    private func updateAvatarImage(with urlString: String) {
+        guard let url = URL(string: urlString) else { return }
+        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            guard let self = self, let data = data, error == nil else { return }
+            let image = UIImage(data: data)
+            DispatchQueue.main.async {
+                self.avatarImageView.image = image
+            }
+        }.resume()
+    }
+    
+    private func updateAvatar() {
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURL)
+        else { return }
+        
+        // TODO [Sprint 11] Обновитt аватар, используя Kingfisher
     }
     
     @objc

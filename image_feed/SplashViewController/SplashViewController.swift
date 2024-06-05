@@ -13,6 +13,7 @@ final class SplashViewController: UIViewController {
     private let oauth2Service = OAuth2Service.shared
     private let storage = OAuth2TokenStorage.shared
     private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -44,11 +45,24 @@ final class SplashViewController: UIViewController {
             guard let self = self else { return }
             
             switch result {
-            case .success:
+            case .success(let profile):
+                self.fetchProfileImage(username: profile.username)
                 self.switchToTabBarController()
             case .failure:
                 // TO DO
                 break
+            }
+        }
+    }
+    
+    private func fetchProfileImage(username: String) {
+        profileImageService.fetchProfileImageURL(username: username) { result in
+            
+            switch result {
+            case .success(let url):
+                print("Fetch profile image URL: \(url)")
+            case .failure(let error):
+                print("Failed to fetch profile image URL: \(error)")
             }
         }
     }
