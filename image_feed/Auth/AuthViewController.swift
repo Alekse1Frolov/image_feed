@@ -63,6 +63,11 @@ extension AuthViewController: WebViewViewControllerDelegate {
                 self.delegate?.didAuthenticate(self)
             case .failure(let error):
                 print("Error fetching OAuth token:", error.localizedDescription)
+                let alertPresenter = AlertPresenter(delegate: self)
+                alertPresenter.showAlertWithNetworkError(
+                    title: "Что-то пошло не так(",
+                    message: "Не удалось войти в систему",
+                    buttonText: "ОК")
             }
         }
     }
