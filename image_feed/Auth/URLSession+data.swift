@@ -19,11 +19,13 @@ extension URLSession {
         
         let task = dataTask(with: request, completionHandler: { data, response, error in
             if let error {
+                print("[dataTask]: NetworkError - request error \(error.localizedDescription)")
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlRequestError(error)))
                 return
             }
             
             guard let httpResponse = response as? HTTPURLResponse else {
+                print("[dataTask]: NetworkError - invalid response")
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.invalidResponse))
                 return
             }
@@ -32,9 +34,11 @@ extension URLSession {
                 if let data {
                     fulfillCompletionOnTheMainThread(.success(data))
                 } else {
+                    print("[dataTask]: NetworkError - no data")
                     fulfillCompletionOnTheMainThread(.failure(NetworkError.noData))
                 }
             } else {
+                print("[dataTask]: NetworkError - HTTP status code \(httpResponse.statusCode)")
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.httpStatusCode(httpResponse.statusCode)))
             }
         })
@@ -51,24 +55,21 @@ extension URLSession {
             switch result {
             case .success(let data):
                 do {
-                    if let jsonString = String(data: data, encoding: .utf8) {
-                        print("Server response: \(jsonString)")
-                    }
                     let decodeObject = try decoder.decode(T.self, from: data)
-                    DispatchQueue.main.async {
+//                    DispatchQueue.main.async {
                         completion(.success(decodeObject))
-                    }
+//                    }
                 } catch {
-                    DispatchQueue.main.async {
-                        print("Decoding error: \(error)")
+//                    DispatchQueue.main.async {
+                        print("[objectTask]: NetworkError - decoding error")
                         completion(.failure(NetworkError.decodingError(error)))
-                    }
+//                    }
                 }
             case .failure(let error):
-                DispatchQueue.main.async {
-                    print("Request error: \(error)")
+//                DispatchQueue.main.async {
+                    print("[objectTask]: NetworkError - request error")
                     completion(.failure(error))
-                }
+//                }
             }
         }
         return task

@@ -59,7 +59,7 @@ final class ProfileImageService {
                         userInfo: ["URL": imageURL]
                     )
                 case .failure(let error):
-                    print("Network error: \(error)")
+                    print("[ProfileImageService fetchProfileImageURL]: error - \(error.localizedDescription)")
                     completion(.failure(error))
                 }
                 self.task = nil
@@ -72,7 +72,7 @@ final class ProfileImageService {
     
     func makeProfileImageRequest(username: String) -> URLRequest? {
         guard let url = URL(string: "https://api.unsplash.com/users/\(username)") else {
-            print("Error creating URL")
+            print("[ProfileImageService makeProfileImageRequest] - error creating URL")
             return nil
         }
         

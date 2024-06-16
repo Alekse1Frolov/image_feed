@@ -20,7 +20,7 @@ final class OAuth2Service {
     func makeOAuthTokenRequest(code: String) -> URLRequest? {
         
         guard let baseURL = Constants.baseURL else {
-            print("Error creating base URL")
+            print("[OAuth2Service - makeOAuthTokenRequest] - Error creating base URL")
             return nil
         }
         
@@ -35,7 +35,7 @@ final class OAuth2Service {
         ]
         
         guard let url = components.url else {
-            print("Error creating URL from components")
+            print("[OAuth2Service - makeOAuthTokenRequest] - Error creating URL from components")
             return nil
         }
         
@@ -61,6 +61,7 @@ final class OAuth2Service {
         lastCode = code
         
         guard let request = makeOAuthTokenRequest(code: code) else {
+            print("[OAuth2Service - fetchOAuthToken] - invalid URL")
             completion(.failure(OAuthError.invalidURL))
             return
         }
@@ -73,9 +74,10 @@ final class OAuth2Service {
                 case .success(let data):
                     let token = data.accessToken
                     self?.tokenStorage.token = token
+                    print("Saving token: \(token)")
                     completion(.success(token))
                 case .failure(let error):
-                    print("Error fetching OAuth token: \(error)")
+                    print("[OAuth2Service - fetchOAuthToken] - error fetching OAuth token")
                     completion(.failure(error))
                 }
                 self?.task = nil

@@ -46,7 +46,7 @@ final class ProfileService {
     
     func makeProfileRequest(token: String) -> URLRequest? {
         guard let url = URL(string: "https://api.unsplash.com/me") else {
-            print("Error creating URL")
+            print("[ProfileService - makeProfileRequest] - error creating URL")
             return nil
         }
         
@@ -86,7 +86,7 @@ final class ProfileService {
                     print("Profile fetched successfully: \(profile)")
                     completion(.success(profile))
                 case .failure(let error):
-                    print("Network error: \(error)")
+                    print("[ProfileService - fetchProfile - network error]")
                     completion(.failure(error))
                 }
                 self?.task = nil
