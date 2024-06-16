@@ -65,21 +65,17 @@ final class OAuth2Service {
             return
         }
         
-        let task = urlSession.data(for: request) { [weak self] result  in
+        print("Fetching OAuth token with request: \(request)")
+        
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>)  in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let data):
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    do {
-                        let tokenResponse = try decoder.decode(OAuthTokenResponseBody.self, from: data)
-                        let token = tokenResponse.accessToken
-                        self?.tokenStorage.token = token
-                        completion(.success(token))
-                    } catch {
-                        completion(.failure(OAuthError.decodingError))
-                    }
+                    let token = data.accessToken
+                    self?.tokenStorage.token = token
+                    completion(.success(token))
                 case .failure(let error):
+                    print("Error fetching OAuth token: \(error)")
                     completion(.failure(error))
                 }
                 self?.task = nil

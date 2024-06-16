@@ -21,6 +21,13 @@ final class ProfileService {
         let firstName: String
         let lastName: String?
         let bio: String?
+        
+        enum CodingKeys: String, CodingKey {
+            case username
+            case firstName = "first_name"
+            case lastName = "last_name"
+            case bio
+        }
     }
     
     struct Profile {
@@ -70,27 +77,14 @@ final class ProfileService {
         
         print("Fetching profile with token: \(token)")
         
-        let task = urlSession.data(for: request) { [weak self] result in
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let data):
-                    
-                    if let jsonString = String(data: data, encoding: .utf8) {
-                        print("Server response: \(jsonString)")
-                    }
-                    
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    do {
-                        let profileResult = try decoder.decode(ProfileResult.self, from: data)
-                        let profile = Profile(profileResult: profileResult)
-                        self?.profile = profile
-                        print("Profile fetched successfully: \(profile)")
-                        completion(.success(profile))
-                    } catch {
-                        print("Decoding error: \(error)")
-                        completion(.failure(OAuthError.decodingError))
-                    }
+                    let profile = Profile(profileResult: data)
+                    self?.profile = profile
+                    print("Profile fetched successfully: \(profile)")
+                    completion(.success(profile))
                 case .failure(let error):
                     print("Network error: \(error)")
                     completion(.failure(error))

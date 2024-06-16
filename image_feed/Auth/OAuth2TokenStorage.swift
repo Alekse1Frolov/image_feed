@@ -18,6 +18,7 @@ final class OAuth2TokenStorage {
             return userDefaults.string(forKey: tokenKey)
         }
         set {
+            print("Saving token: \(newValue ?? "nil")")
             userDefaults.set(newValue, forKey: tokenKey)
         }
     }
