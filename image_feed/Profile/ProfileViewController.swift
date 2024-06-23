@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
@@ -133,13 +134,14 @@ final class ProfileViewController: UIViewController {
     
     private func updateAvatarImage(with urlString: String) {
         guard let url = URL(string: urlString) else { return }
-        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            guard let self = self, let data = data, error == nil else { return }
-            let image = UIImage(data: data)
-            DispatchQueue.main.async {
-                self.avatarImageView.image = image
-            }
-        }.resume()
+//        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+//            guard let self = self, let data = data, error == nil else { return }
+//            let image = UIImage(data: data)
+//            DispatchQueue.main.async {
+//                self.avatarImageView.image = image
+//            }
+//        }.resume()
+        avatarImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
     }
     
     private func updateAvatar() {
@@ -148,7 +150,7 @@ final class ProfileViewController: UIViewController {
             let url = URL(string: profileImageURL)
         else { return }
         
-        // TODO [Sprint 11] Обновитt аватар, используя Kingfisher
+        avatarImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
     }
     
     @objc
