@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WgV-Py-Gd6">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -194,13 +194,13 @@
         <!--Auth View Controller-->
         <scene sceneID="HWX-gx-XuQ">
             <objects>
-                <viewController storyboardIdentifier="ShowAuthenticationScreen" id="24I-dN-Kcw" customClass="AuthViewController" customModule="image_feed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AuthViewController" id="24I-dN-Kcw" customClass="AuthViewController" customModule="image_feed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Baa-X5-cnf">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HO2-56-rJZ" userLabel="Login button">
-                                <rect key="frame" x="16" y="714" width="361" height="48"/>
+                                <rect key="frame" x="16" y="680" width="361" height="48"/>
                                 <color key="backgroundColor" name="YP_white_color"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="1E1-FB-jnS"/>
@@ -252,7 +252,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ToK-8E-R9N">
-                                <rect key="frame" x="0.0" y="44" width="393" height="808"/>
+                                <rect key="frame" x="0.0" y="103" width="393" height="749"/>
                                 <color key="backgroundColor" name="YP_white_color"/>
                                 <wkWebViewConfiguration key="configuration">
                                     <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
@@ -260,7 +260,7 @@
                                 </wkWebViewConfiguration>
                             </wkWebView>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="FHL-HO-IHP">
-                                <rect key="frame" x="0.0" y="44" width="393" height="4"/>
+                                <rect key="frame" x="0.0" y="103" width="393" height="4"/>
                                 <color key="progressTintColor" name="YP_black_color"/>
                             </progressView>
                         </subviews>
@@ -293,7 +293,7 @@
                     <tabBarItem key="tabBarItem" title="Item" id="baF-Tk-792"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="vpN-IP-SvC">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
+                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -305,48 +305,16 @@
             </objects>
             <point key="canvasLocation" x="233" y="-2358"/>
         </scene>
-        <!--Splash View Controller-->
-        <scene sceneID="ho7-Cl-Pkz">
-            <objects>
-                <viewController id="WgV-Py-Gd6" userLabel="Splash View Controller" customClass="SplashViewController" customModule="image_feed" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="ki0-tH-rgN">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launchScreenImage" translatesAutoresizingMaskIntoConstraints="NO" id="R21-3J-8WM">
-                                <rect key="frame" x="159" y="399.66666666666669" width="75" height="77.666666666666686"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="77.680000000000007" id="2JQ-Jk-CqW"/>
-                                    <constraint firstAttribute="width" constant="75" id="eJE-ax-ZCO"/>
-                                </constraints>
-                            </imageView>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="ogD-qW-Qrl"/>
-                        <color key="backgroundColor" name="YP_black_color"/>
-                        <constraints>
-                            <constraint firstItem="R21-3J-8WM" firstAttribute="centerY" secondItem="ogD-qW-Qrl" secondAttribute="centerY" id="Bss-5q-EWn"/>
-                            <constraint firstItem="R21-3J-8WM" firstAttribute="centerX" secondItem="ogD-qW-Qrl" secondAttribute="centerX" id="pWc-oy-1fN"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <segue destination="4fl-dx-7g9" kind="presentation" identifier="ShowAuthenticationScreen" modalPresentationStyle="fullScreen" id="j9u-4h-eZd"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="i1a-FC-0ai" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-596" y="-2358"/>
-        </scene>
     </scenes>
     <resources>
         <image name="0" width="1600" height="1059"/>
         <image name="auth_logo" width="60" height="60"/>
         <image name="chevron_backward" width="24" height="24"/>
-        <image name="launchScreenImage" width="74" height="76.666664123535156"/>
         <image name="likeButtonInactive" width="42" height="42"/>
         <image name="shareButton" width="51" height="51"/>
         <image name="tab_editorial_active" width="30.333333969116211" height="30"/>
         <namedColor name="YP_black_color">
-            <color red="0.10199999809265137" green="0.10599999874830246" blue="0.13300000131130219" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="YP_white_color">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

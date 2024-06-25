@@ -13,20 +13,19 @@ final class ProfileViewController: UIViewController {
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
-//    private let tokenStorage = OAuth2TokenStorage.shared
     
     private let avatarImageView: UIImageView = {
-//        let image = UIImage(named: "avatar")
         let image = UIImage(systemName: "person.crop.circle.fill")
         let imageView = UIImageView(image: image)
+        imageView.layer.cornerRadius = 35
         imageView.tintColor = .gray
+        imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-//        label.text = "Екатерина Новикова"
         label.font = UIFont.systemFont(ofSize: 23, weight: .semibold)
         label.textColor = UIColor(named: "YP_white_color")
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -35,7 +34,6 @@ final class ProfileViewController: UIViewController {
     
     private let loginLabel: UILabel = {
         let label = UILabel()
-//        label.text = "@ekaterina_now"
         label.font = UIFont.systemFont(ofSize: 13.0)
         label.textColor = UIColor(named: "YP_gray_color")
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -44,7 +42,6 @@ final class ProfileViewController: UIViewController {
     
     private let descriptionLabel: UILabel = {
         let label = UILabel()
-//        label.text = "Hello, world!"
         label.font = UIFont.systemFont(ofSize: 13.0)
         label.textColor = UIColor(named: "YP_white_color")
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -134,13 +131,7 @@ final class ProfileViewController: UIViewController {
     
     private func updateAvatarImage(with urlString: String) {
         guard let url = URL(string: urlString) else { return }
-//        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-//            guard let self = self, let data = data, error == nil else { return }
-//            let image = UIImage(data: data)
-//            DispatchQueue.main.async {
-//                self.avatarImageView.image = image
-//            }
-//        }.resume()
+
         avatarImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
     }
     
