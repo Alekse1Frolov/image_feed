@@ -8,6 +8,7 @@
 import Foundation
 
 enum OAuthError: Error {
-        case invalidURL
-        case decodingError
-    }
+    case invalidURL
+    case decodingError
+    case invalidRequest
+}

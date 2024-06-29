@@ -6,20 +6,26 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
+    private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
+    private var profileImageServiceObserver: NSObjectProtocol?
+    
     private let avatarImageView: UIImageView = {
-        let image = UIImage(named: "avatar")
+        let image = UIImage(systemName: "person.crop.circle.fill")
         let imageView = UIImageView(image: image)
+        imageView.layer.cornerRadius = 35
         imageView.tintColor = .gray
+        imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Екатерина Новикова"
         label.font = UIFont.systemFont(ofSize: 23, weight: .semibold)
         label.textColor = UIColor(named: "YP_white_color")
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -28,7 +34,6 @@ final class ProfileViewController: UIViewController {
     
     private let loginLabel: UILabel = {
         let label = UILabel()
-        label.text = "@ekaterina_now"
         label.font = UIFont.systemFont(ofSize: 13.0)
         label.textColor = UIColor(named: "YP_gray_color")
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -37,7 +42,6 @@ final class ProfileViewController: UIViewController {
     
     private let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "Hello, world!"
         label.font = UIFont.systemFont(ofSize: 13.0)
         label.textColor = UIColor(named: "YP_white_color")
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -60,8 +64,21 @@ final class ProfileViewController: UIViewController {
     }
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         addSubViews()
         applyConstraints()
+        updateProfileInfo()
+        
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                guard let self = self else { return }
+                self.updateAvatar()
+            }
+        updateAvatar()
     }
     
     private func addSubViews() {
@@ -94,6 +111,37 @@ final class ProfileViewController: UIViewController {
             logoutButton.widthAnchor.constraint(equalToConstant: 24),
             logoutButton.heightAnchor.constraint(equalToConstant: 24)
         ])
+    }
+    
+    private func updateProfileInfo() {
+        guard let profile = profileService.profile else { return }
+        nameLabel.text = profile.name
+        loginLabel.text = profile.loginName
+        descriptionLabel.text = profile.bio
+        
+        profileImageService.fetchProfileImageURL(username: profile.username) { [weak self] result in
+            switch result {
+            case .success(let imageURL):
+                self?.updateAvatarImage(with: imageURL)
+            case .failure(let error):
+                print("Failed to fetch profile image URL: \(error)")
+            }
+        }
+    }
+    
+    private func updateAvatarImage(with urlString: String) {
+        guard let url = URL(string: urlString) else { return }
+
+        avatarImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
+    }
+    
+    private func updateAvatar() {
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURL)
+        else { return }
+        
+        avatarImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
     }
     
     @objc

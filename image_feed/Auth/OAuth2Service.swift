@@ -11,13 +11,16 @@ final class OAuth2Service {
     
     static let shared = OAuth2Service()
     private let tokenStorage = OAuth2TokenStorage.shared
+    private let urlSession = URLSession.shared
+    private var task: URLSessionTask?
+    private var lastCode: String?
     
     private init() {}
     
     func makeOAuthTokenRequest(code: String) -> URLRequest? {
         
         guard let baseURL = Constants.baseURL else {
-            print("Error creating base URL")
+            print("[OAuth2Service - makeOAuthTokenRequest] - Error creating base URL")
             return nil
         }
         
@@ -32,7 +35,7 @@ final class OAuth2Service {
         ]
         
         guard let url = components.url else {
-            print("Error creating URL from components")
+            print("[OAuth2Service - makeOAuthTokenRequest] - Error creating URL from components")
             return nil
         }
         
@@ -43,28 +46,45 @@ final class OAuth2Service {
     }
     
     func fetchOAuthToken(with code: String, completion: @escaping (Result<String, Error>) -> Void) {
-
+        
+        assert(Thread.isMainThread)
+        
+        if let task {
+            if lastCode == code {
+                completion(.failure(OAuthError.invalidRequest))
+                return
+            } else {
+                task.cancel()
+            }
+        }
+        
+        lastCode = code
+        
         guard let request = makeOAuthTokenRequest(code: code) else {
+            print("[OAuth2Service - fetchOAuthToken] - invalid URL")
             completion(.failure(OAuthError.invalidURL))
             return
         }
-
-        let task = URLSession.shared.data(for: request) { result  in
-            switch result {
-            case .success(let data):
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                do {
-                    let tokenResponse = try decoder.decode(OAuthTokenResponseBody.self, from: data)
-                    let token = tokenResponse.accessToken
+        
+        print("Fetching OAuth token with request: \(request)")
+        
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>)  in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let data):
+                    let token = data.accessToken
+                    self?.tokenStorage.token = token
+                    print("Saving token: \(token)")
                     completion(.success(token))
-                } catch {
-                    completion(.failure(OAuthError.decodingError))
+                case .failure(let error):
+                    print("[OAuth2Service - fetchOAuthToken] - error fetching OAuth token")
+                    completion(.failure(error))
                 }
-            case .failure(let error):
-                completion(.failure(error))
+                self?.task = nil
+                self?.lastCode = nil
             }
         }
+        self.task = task
         task.resume()
     }
 }

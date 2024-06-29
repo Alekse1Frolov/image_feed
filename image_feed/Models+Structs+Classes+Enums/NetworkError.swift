@@ -11,4 +11,6 @@ enum NetworkError: Error {
     case httpStatusCode(Int)
     case invalidResponse
     case noData
+    case decodingError(Error)
+    case urlRequestError(Error)
 }
