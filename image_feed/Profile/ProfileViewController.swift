@@ -13,6 +13,7 @@ final class ProfileViewController: UIViewController {
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
+    private var gradientLayers: [CAGradientLayer] = []
     
     private let avatarImageView: UIImageView = {
         let image = UIImage(systemName: "person.crop.circle.fill")
@@ -68,6 +69,7 @@ final class ProfileViewController: UIViewController {
         addSubViews()
         applyConstraints()
         updateProfileInfo()
+        addGradientLayers()
         
         profileImageServiceObserver = NotificationCenter.default
             .addObserver(
@@ -77,6 +79,7 @@ final class ProfileViewController: UIViewController {
             ) { [weak self] _ in
                 guard let self = self else { return }
                 self.updateAvatar()
+                self.removeGradientLayers()
             }
         updateAvatar()
     }
@@ -111,6 +114,37 @@ final class ProfileViewController: UIViewController {
             logoutButton.widthAnchor.constraint(equalToConstant: 24),
             logoutButton.heightAnchor.constraint(equalToConstant: 24)
         ])
+    }
+    
+    private func addGradientLayers() {
+        addGradientLayer(to: avatarImageView, size: CGSize(width: 70, height: 70), cornerRadius: 35)
+        addGradientLayer(to: nameLabel, size: CGSize(width: nameLabel.bounds.width, height: nameLabel.bounds.height), cornerRadius: 0)
+        addGradientLayer(to: loginLabel, size: CGSize(width: loginLabel.bounds.width, height: loginLabel.bounds.height), cornerRadius: 0)
+        addGradientLayer(to: descriptionLabel, size: CGSize(width: descriptionLabel.bounds.width, height: descriptionLabel.bounds.height), cornerRadius: 0)
+    }
+    
+    private func addGradientLayer(to view: UIView, size: CGSize, cornerRadius: CGFloat) {
+        let gradient = CAGradientLayer()
+        
+        gradient.frame = CGRect(origin: .zero, size: size)
+        gradient.locations = [0, 0.1, 0.3]
+        gradient.colors = [
+            UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor,
+            UIColor(red: 0.531, green: 0.533, blue: 0.553, alpha: 1).cgColor,
+            UIColor(red: 0.431, green: 0.433, blue: 0.453, alpha: 1).cgColor
+        ]
+        
+        gradient.startPoint = CGPoint(x: 0, y: 0.5)
+        gradient.endPoint = CGPoint(x: 1, y: 0.5)
+        gradient.cornerRadius = cornerRadius
+        gradient.masksToBounds = true
+        gradientLayers.append(gradient)
+        view.layer.addSublayer(gradient)
+    }
+    
+    private func removeGradientLayers() {
+        gradientLayers.forEach { $0.removeFromSuperlayer() }
+        gradientLayers.removeAll()
     }
     
     private func updateProfileInfo() {

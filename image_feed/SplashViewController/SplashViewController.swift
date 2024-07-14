@@ -55,6 +55,7 @@ final class SplashViewController: UIViewController {
             let tabBarController = UIStoryboard(name: "Main", bundle: .main)
                 .instantiateViewController(withIdentifier: "TabBarViewController")
             window.rootViewController = tabBarController
+            window.makeKeyAndVisible()
         }
     }
     
@@ -70,8 +71,10 @@ final class SplashViewController: UIViewController {
                 self.fetchProfileImage(username: profile.username)
                 self.switchToTabBarController()
             case .failure (let error):
-                print(error)
-                break
+//                print(error)
+//                break
+                print("Error fetching profile: \(error.localizedDescription)")
+                                self.presentAuthViewController()
             }
         }
     }

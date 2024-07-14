@@ -20,6 +20,7 @@ final class ProfileLogoutService {
     }
     
     private func cleanCookies() {
+        print("Cleaning cookies...")
         HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
         WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
             records.forEach { record in
@@ -29,17 +30,18 @@ final class ProfileLogoutService {
     }
     
     private func cleanProfileData() {
+        print("Cleaning profile data...")
         ProfileService.shared.cleanProfile()
         ProfileImageService.shared.cleanProfileImage()
         ImageListService.shared.cleanPhotos()
         OAuth2TokenStorage.shared.token = nil
+        print("Removing token")
     }
     
     private func switchToAuthScreen() {
-            guard let window = UIApplication.shared.windows.first else { return }
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController")
-            window.rootViewController = authViewController
-            window.makeKeyAndVisible()
-        }
+        print("Switching to Auth Screen...")
+        guard let window = UIApplication.shared.windows.first else { return }
+        let splashViewController = SplashViewController()
+        window.rootViewController = splashViewController
+    }
 }
