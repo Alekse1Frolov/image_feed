@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class SingleImageViewController: UIViewController {
     
@@ -17,6 +18,13 @@ final class SingleImageViewController: UIViewController {
         }
     }
     
+    var imageURL: URL? {
+        didSet {
+            guard isViewLoaded else { return }
+            loadImage()
+        }
+    }
+    
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var scrollView: UIScrollView!
     
@@ -25,11 +33,23 @@ final class SingleImageViewController: UIViewController {
     }
     
     @IBAction private func didTapShareButton(_ sender: UIButton) {
-        guard let image else { return }
+        print("Share button tapped")
+        guard let image else { print("No image to share"); return }
+        
+        print("Preparing to share image: \(image)")
         let share = UIActivityViewController(
             activityItems: [image],
             applicationActivities: nil
         )
+        share.completionWithItemsHandler = { activity, success, items, error in
+                    if let error = error {
+                        print("Error sharing: \(error)")
+                    } else if success {
+                        print("Image shared successfully")
+                    } else {
+                        print("Sharing canceled")
+                    }
+                }
         present(share, animated: true, completion: nil)
     }
     
@@ -37,8 +57,27 @@ final class SingleImageViewController: UIViewController {
         super.viewDidLoad()
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
-        imageView.image = image
-        rescaleAndCenterImageInScrollView(image: image)
+        scrollView.delegate = self
+        loadImage()
+    }
+    
+    private func loadImage() {
+        guard let imageURL = imageURL else { return }
+        print("Showing loader")
+        UIBlockingProgressHUD.show()
+        imageView.kf.setImage(with: imageURL) { [weak self] result in
+            print("Hiding loader")
+            UIBlockingProgressHUD.dismiss()
+            
+            guard let self = self else { return }
+            switch result {
+            case .success(let imageResult):
+                self.image = imageResult.image
+                self.rescaleAndCenterImageInScrollView(image: imageResult.image)
+            case .failure:
+                self.showError()
+            }
+        }
     }
     
     private func rescaleAndCenterImageInScrollView(image: UIImage?) {
@@ -63,6 +102,25 @@ final class SingleImageViewController: UIViewController {
         let y = (newContentSize.height - visibleRectSize.height) / 2
         
         scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
+    }
+    
+    private func showError() {
+        let alert = UIAlertController(title: "Error",
+                                      message: "Something went wrong. Try again?",
+                                      preferredStyle: .alert)
+        
+        let retryAction = UIAlertAction(title: "Repeat", style: .default) { _ in
+            self.loadImage()
+        }
+        
+        let cancelAction = UIAlertAction(title: "No",
+                                        style: .cancel,
+                                        handler: nil)
+        
+        alert.addAction(retryAction)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true, completion: nil)
     }
 }
 

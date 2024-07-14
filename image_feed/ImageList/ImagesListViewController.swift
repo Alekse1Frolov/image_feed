@@ -10,8 +10,6 @@ import Kingfisher
 
 final class ImagesListViewController: UIViewController {
     
-//    private let photosName: [String] = Array(0..<20).map{ "\($0)" }
-    
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     
     private lazy var dateFormatter: DateFormatter = {
@@ -54,8 +52,8 @@ final class ImagesListViewController: UIViewController {
         if segue.identifier == showSingleImageSegueIdentifier {
             let viewController = segue.destination as! SingleImageViewController
             let indexPath = sender as! IndexPath
-            let image = UIImage(named: photos[indexPath.row].largeImageURL)
-            viewController.image = image
+            
+            viewController.imageURL = URL(string: photos[indexPath.row].largeImageURL)
         } else {
             super.prepare(for: segue, sender: sender)
         }
@@ -79,6 +77,7 @@ extension ImagesListViewController {
         
         let likeImage = photo.isLiked ? UIImage(named: "likeButtonActive") : UIImage(named: "likeButtonInactive")
         cell.likeButton.setImage(likeImage, for: .normal)
+        cell.delegate = self
     }
 }
 
@@ -125,6 +124,29 @@ extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row + 1 == photos.count {
             imageListService.fetchPhotosNextPage()
+        }
+    }
+}
+
+extension ImagesListViewController: ImageListCellDelegate {
+    func imageListCellDidTapLike(_ cell: ImagesListCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        let photo = photos[indexPath.row]
+        
+        
+        UIBlockingProgressHUD.show()
+        imageListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { result in
+            
+            switch result {
+            case .success:
+                self.photos = self.imageListService.photos
+                cell.setIsLiked(self.photos[indexPath.row].isLiked)
+                UIBlockingProgressHUD.dismiss()
+            case .failure(let error):
+                print("Failed to change like status: \(error)")
+            }
+            
+            UIBlockingProgressHUD.dismiss()
         }
     }
 }

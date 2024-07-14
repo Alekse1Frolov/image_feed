@@ -146,10 +146,7 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func didTapLogoutButton() {
-        nameLabel.text = ""
-        loginLabel.text = ""
-        descriptionLabel.text = ""
-        avatarImageView.image = UIImage(systemName: "person.crop.circle.fill")
+        ProfileLogoutService.shared.logout()
     }
 }
 
