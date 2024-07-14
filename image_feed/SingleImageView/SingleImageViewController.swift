@@ -25,6 +25,8 @@ final class SingleImageViewController: UIViewController {
         }
     }
     
+    private var alertPresenter: AlertPresenter?
+    
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var scrollView: UIScrollView!
     
@@ -42,14 +44,14 @@ final class SingleImageViewController: UIViewController {
             applicationActivities: nil
         )
         share.completionWithItemsHandler = { activity, success, items, error in
-                    if let error = error {
-                        print("Error sharing: \(error)")
-                    } else if success {
-                        print("Image shared successfully")
-                    } else {
-                        print("Sharing canceled")
-                    }
-                }
+            if let error = error {
+                print("Error sharing: \(error)")
+            } else if success {
+                print("Image shared successfully")
+            } else {
+                print("Sharing canceled")
+            }
+        }
         present(share, animated: true, completion: nil)
     }
     
@@ -58,6 +60,7 @@ final class SingleImageViewController: UIViewController {
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
         scrollView.delegate = self
+        alertPresenter = AlertPresenter(delegate: self)
         loadImage()
     }
     
@@ -105,22 +108,13 @@ final class SingleImageViewController: UIViewController {
     }
     
     private func showError() {
-        let alert = UIAlertController(title: "Error",
-                                      message: "Something went wrong. Try again?",
-                                      preferredStyle: .alert)
-        
-        let retryAction = UIAlertAction(title: "Repeat", style: .default) { _ in
-            self.loadImage()
+        alertPresenter?.showTwoOptionsAlert(title: "Ошибка",
+                                            message: "Что-то пошло не так. Попробовать снова?",
+                                            confirmButtonText: "Повторить",
+                                            cancelButtonText: "Нет"
+        ) { [weak self] in
+            self?.loadImage()
         }
-        
-        let cancelAction = UIAlertAction(title: "No",
-                                        style: .cancel,
-                                        handler: nil)
-        
-        alert.addAction(retryAction)
-        alert.addAction(cancelAction)
-        
-        present(alert, animated: true, completion: nil)
     }
 }
 

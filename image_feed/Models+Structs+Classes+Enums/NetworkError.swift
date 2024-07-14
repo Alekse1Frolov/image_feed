@@ -14,4 +14,5 @@ enum NetworkError: Error {
     case decodingError(Error)
     case urlRequestError(Error)
     case indexError
+    case equalTokens
 }

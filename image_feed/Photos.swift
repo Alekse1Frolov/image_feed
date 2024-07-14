@@ -30,9 +30,8 @@ extension Photo {
         self.isLiked = photoResult.likedByUser
     }
     
-    private static let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+    private static let dateFormatter: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
         return formatter
     }()
 }

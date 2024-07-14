@@ -56,20 +56,14 @@ extension URLSession {
             case .success(let data):
                 do {
                     let decodeObject = try decoder.decode(T.self, from: data)
-//                    DispatchQueue.main.async {
                         completion(.success(decodeObject))
-//                    }
                 } catch {
-//                    DispatchQueue.main.async {
                         print("[objectTask]: NetworkError - decoding error")
                         completion(.failure(NetworkError.decodingError(error)))
-//                    }
                 }
             case .failure(let error):
-//                DispatchQueue.main.async {
                     print("[objectTask]: NetworkError - request error")
                     completion(.failure(error))
-//                }
             }
         }
         return task

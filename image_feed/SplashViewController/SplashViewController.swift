@@ -71,10 +71,8 @@ final class SplashViewController: UIViewController {
                 self.fetchProfileImage(username: profile.username)
                 self.switchToTabBarController()
             case .failure (let error):
-//                print(error)
-//                break
                 print("Error fetching profile: \(error.localizedDescription)")
-                                self.presentAuthViewController()
+                self.presentAuthViewController()
             }
         }
     }

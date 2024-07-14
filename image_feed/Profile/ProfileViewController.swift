@@ -14,6 +14,7 @@ final class ProfileViewController: UIViewController {
     private let profileImageService = ProfileImageService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
     private var gradientLayers: [CAGradientLayer] = []
+    private var alertPresenter: AlertPresenter?
     
     private let avatarImageView: UIImageView = {
         let image = UIImage(systemName: "person.crop.circle.fill")
@@ -70,6 +71,8 @@ final class ProfileViewController: UIViewController {
         applyConstraints()
         updateProfileInfo()
         addGradientLayers()
+        
+        alertPresenter = AlertPresenter(delegate: self)
         
         profileImageServiceObserver = NotificationCenter.default
             .addObserver(
@@ -165,7 +168,7 @@ final class ProfileViewController: UIViewController {
     
     private func updateAvatarImage(with urlString: String) {
         guard let url = URL(string: urlString) else { return }
-
+        
         avatarImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
     }
     
@@ -180,7 +183,11 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func didTapLogoutButton() {
-        ProfileLogoutService.shared.logout()
+        alertPresenter?.showTwoOptionsAlert(title: "Пока, пока!",
+                                              message: "Уверены, что хотите выйти?",
+                                              confirmButtonText: "Да",
+                                              cancelButtonText: "Нет") {
+            ProfileLogoutService.shared.logout()
+        }
     }
 }
-
