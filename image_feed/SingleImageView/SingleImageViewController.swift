@@ -35,10 +35,11 @@ final class SingleImageViewController: UIViewController {
     }
     
     @IBAction private func didTapShareButton(_ sender: UIButton) {
-        print("Share button tapped")
-        guard let image else { print("No image to share"); return }
+        guard let image else {
+            print("No image to share")
+            return
+        }
         
-        print("Preparing to share image: \(image)")
         let share = UIActivityViewController(
             activityItems: [image],
             applicationActivities: nil
@@ -68,11 +69,12 @@ final class SingleImageViewController: UIViewController {
         guard let imageURL = imageURL else { return }
         print("Showing loader")
         UIBlockingProgressHUD.show()
+        
         imageView.kf.setImage(with: imageURL) { [weak self] result in
+            guard let self = self else { return }
             print("Hiding loader")
             UIBlockingProgressHUD.dismiss()
             
-            guard let self = self else { return }
             switch result {
             case .success(let imageResult):
                 self.image = imageResult.image

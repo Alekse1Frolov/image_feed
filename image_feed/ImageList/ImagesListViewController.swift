@@ -21,6 +21,7 @@ final class ImagesListViewController: UIViewController {
     
     private let imageListService = ImageListService()
     private var photos: [Photo] = []
+    private var isLiking: Bool = false
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
@@ -44,9 +45,21 @@ final class ImagesListViewController: UIViewController {
     }
     
     @objc private func handleImageListServiceDidChange(_ notivication: Notification) {
-        self.photos = imageListService.photos
-        tableView.reloadData()
+        updateTableViewAnimated()
     }
+    
+    private func updateTableViewAnimated() {
+            let oldPhotos = photos.count
+            let newPhotos = imageListService.photos.count
+            photos = imageListService.photos
+            
+            tableView.performBatchUpdates {
+                let indexPaths = (oldPhotos..<newPhotos).map { i in
+                    IndexPath(row: i, section: 0)
+                }
+                tableView.insertRows(at: indexPaths, with: .automatic)
+            } completion: { _ in }
+        }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showSingleImageSegueIdentifier {
@@ -133,20 +146,27 @@ extension ImagesListViewController: ImageListCellDelegate {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         let photo = photos[indexPath.row]
         
+        guard !isLiking else { return }
+        isLiking = true
         
         UIBlockingProgressHUD.show()
         imageListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { result in
+            
+            defer {
+                self.isLiking = false
+                UIBlockingProgressHUD.dismiss()
+            }
             
             switch result {
             case .success:
                 self.photos = self.imageListService.photos
                 cell.setIsLiked(self.photos[indexPath.row].isLiked)
-                UIBlockingProgressHUD.dismiss()
+//                UIBlockingProgressHUD.dismiss()
             case .failure(let error):
                 print("Failed to change like status: \(error)")
             }
             
-            UIBlockingProgressHUD.dismiss()
+//            UIBlockingProgressHUD.dismiss()
         }
     }
 }
