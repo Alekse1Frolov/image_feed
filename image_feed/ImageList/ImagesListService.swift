@@ -60,8 +60,13 @@ final class ImageListService {
                 switch result {
                 case .success(let photoResults):
                     self.lastLoadedPage = nextPage
-                    let newPhotos = photoResults.map { Photo(from: $0) }
-                    self.photos.append(contentsOf: newPhotos)
+                    let newPhotos = photoResults.compactMap { PhotoMapper.map(from: $0) }
+                    
+                    let photoFiltered = newPhotos.filter { newPhoto in
+                        !self.photos.contains(where: { $0.id == newPhoto.id })
+                    }
+                    
+                    self.photos.append(contentsOf: photoFiltered)
                     NotificationCenter.default.post(name: ImageListService.didChangeNotification, object: nil)
                     print("[fetchPhotosNextPage]: Photos fetched successfully")
                     
@@ -93,7 +98,10 @@ final class ImageListService {
     }
     
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Photo, Error>) -> Void) {
-        guard let request = makeLikesRequest(with: "https://api.unsplash.com/photos/\(photoId)/like", httpMethod: isLike ? "DELETE" : "POST") else {
+        let urlString = "https://api.unsplash.com/photos/\(photoId)/like"
+        let httpMethod = isLike ? "DELETE" : "POST"
+        
+        guard let request = makeLikesRequest(with: urlString, httpMethod: httpMethod) else {
             print("[ImageListService - changeLike] - error creating request")
             return
         }

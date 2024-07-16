@@ -66,7 +66,7 @@ final class ImagesListViewController: UIViewController {
             let viewController = segue.destination as! SingleImageViewController
             let indexPath = sender as! IndexPath
             
-            viewController.imageURL = URL(string: photos[indexPath.row].largeImageURL)
+            viewController.imageURL = photos[indexPath.row].largeImageURL
         } else {
             super.prepare(for: segue, sender: sender)
         }
@@ -78,9 +78,7 @@ extension ImagesListViewController {
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) -> Void {
         let photo = photos[indexPath.row]
         
-        if let url = URL(string: photo.thumbImageURL) {
-            cell.cellImage.kf.setImage(with: url)
-        }
+        cell.cellImage.kf.setImage(with: photo.thumbImageURL)
         
         if let date = photo.createdAt {
             cell.dateLabel.text = dateFormatter.string(from: date)
@@ -161,12 +159,10 @@ extension ImagesListViewController: ImageListCellDelegate {
             case .success:
                 self.photos = self.imageListService.photos
                 cell.setIsLiked(self.photos[indexPath.row].isLiked)
-//                UIBlockingProgressHUD.dismiss()
+                
             case .failure(let error):
                 print("Failed to change like status: \(error)")
             }
-            
-//            UIBlockingProgressHUD.dismiss()
         }
     }
 }
