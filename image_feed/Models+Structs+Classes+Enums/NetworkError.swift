@@ -13,4 +13,6 @@ enum NetworkError: Error {
     case noData
     case decodingError(Error)
     case urlRequestError(Error)
+    case indexError
+    case equalTokens
 }

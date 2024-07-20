@@ -16,13 +16,6 @@ final class ProfileImageService {
     
     private init() {}
     
-    struct UserResult: Codable {
-        struct ProfileUmage: Codable {
-            let small: String
-        }
-        let profile_image: ProfileUmage
-    }
-    
     private(set) var avatarURL: String?
     
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
@@ -30,7 +23,7 @@ final class ProfileImageService {
         
         if let task = task {
             if lastUserName == username {
-                completion(.failure(NetworkError.invalidResponse))
+                completion(.failure(NetworkError.equalTokens))
                 return
             } else {
                 task.cancel()
@@ -50,7 +43,7 @@ final class ProfileImageService {
                 
                 switch result {
                 case .success(let data):
-                    let imageURL = data.profile_image.small
+                    let imageURL = data.profileImage.small
                     self.avatarURL = imageURL
                     completion(.success(imageURL))
                     NotificationCenter.default.post(
@@ -82,5 +75,26 @@ final class ProfileImageService {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         return request
+    }
+    
+    func cleanProfileImage() {
+        avatarURL = nil
+    }
+}
+
+extension ProfileImageService {
+    struct UserResult: Codable {
+        struct ProfileImage: Codable {
+            let small: String
+            
+            enum CodingKeys: String, CodingKey {
+                case small
+            }
+        }
+        let profileImage: ProfileImage
+        
+        enum CodingKeys: String, CodingKey {
+            case profileImage = "profile_image"
+        }
     }
 }
