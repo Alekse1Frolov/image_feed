@@ -29,6 +29,9 @@
 		F790F7B42C4DBEAE00CF454D /* ProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F790F7B32C4DBEAE00CF454D /* ProfilePresenter.swift */; };
 		F790F7B62C4DC0E000CF454D /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F790F7B52C4DC0E000CF454D /* Profile.swift */; };
 		F790F7B82C4DC14100CF454D /* ProfileResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F790F7B72C4DC14100CF454D /* ProfileResult.swift */; };
+		F790F7BA2C4ECAAE00CF454D /* ProfileViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F790F7B92C4ECAAE00CF454D /* ProfileViewTests.swift */; };
+		F790F7BC2C4ECD1600CF454D /* ProfilePresenterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F790F7BB2C4ECD1600CF454D /* ProfilePresenterSpy.swift */; };
+		F790F7C02C4EE27800CF454D /* ProfileViewControllerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F790F7BF2C4EE27800CF454D /* ProfileViewControllerSpy.swift */; };
 		F7A3F2C32B7BD7A200B5A398 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A3F2C22B7BD7A200B5A398 /* AppDelegate.swift */; };
 		F7A3F2C52B7BD7A200B5A398 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A3F2C42B7BD7A200B5A398 /* SceneDelegate.swift */; };
 		F7A3F2C72B7BD7A200B5A398 /* ImagesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A3F2C62B7BD7A200B5A398 /* ImagesListViewController.swift */; };
@@ -82,6 +85,9 @@
 		F790F7B32C4DBEAE00CF454D /* ProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenter.swift; sourceTree = "<group>"; };
 		F790F7B52C4DC0E000CF454D /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		F790F7B72C4DC14100CF454D /* ProfileResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileResult.swift; sourceTree = "<group>"; };
+		F790F7B92C4ECAAE00CF454D /* ProfileViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewTests.swift; sourceTree = "<group>"; };
+		F790F7BB2C4ECD1600CF454D /* ProfilePresenterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenterSpy.swift; sourceTree = "<group>"; };
+		F790F7BF2C4EE27800CF454D /* ProfileViewControllerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewControllerSpy.swift; sourceTree = "<group>"; };
 		F7A3F2BF2B7BD7A200B5A398 /* image_feed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = image_feed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7A3F2C22B7BD7A200B5A398 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F7A3F2C42B7BD7A200B5A398 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -196,6 +202,9 @@
 				F790F7A62C4D7FED00CF454D /* WebViewTests.swift */,
 				F790F7AD2C4D81A900CF454D /* WebViewPresenterSpy.swift */,
 				F790F7AF2C4D837000CF454D /* WebViewViewControllerSpy.swift */,
+				F790F7B92C4ECAAE00CF454D /* ProfileViewTests.swift */,
+				F790F7BB2C4ECD1600CF454D /* ProfilePresenterSpy.swift */,
+				F790F7BF2C4EE27800CF454D /* ProfileViewControllerSpy.swift */,
 			);
 			path = image_feedTests;
 			sourceTree = "<group>";
@@ -372,8 +381,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				F790F7A72C4D7FED00CF454D /* WebViewTests.swift in Sources */,
+				F790F7BA2C4ECAAE00CF454D /* ProfileViewTests.swift in Sources */,
 				F790F7B02C4D837000CF454D /* WebViewViewControllerSpy.swift in Sources */,
+				F790F7BC2C4ECD1600CF454D /* ProfilePresenterSpy.swift in Sources */,
 				F790F7AE2C4D81A900CF454D /* WebViewPresenterSpy.swift in Sources */,
+				F790F7C02C4EE27800CF454D /* ProfileViewControllerSpy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

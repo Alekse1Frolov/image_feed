@@ -20,7 +20,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     private var gradientLayers: [CAGradientLayer] = []
     private var alertPresenter: AlertPresenter?
     
-    private let avatarImageView: UIImageView = {
+    let avatarImageView: UIImageView = {
         let image = UIImage(systemName: "person.crop.circle.fill")
         let imageView = UIImageView(image: image)
         imageView.layer.cornerRadius = 35
@@ -30,7 +30,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         return imageView
     }()
     
-    private let nameLabel: UILabel = {
+    let nameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 23, weight: .semibold)
         label.textColor = UIColor(named: "YP_white_color")
@@ -38,7 +38,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         return label
     }()
     
-    private let loginLabel: UILabel = {
+    let loginLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 13.0)
         label.textColor = UIColor(named: "YP_gray_color")
@@ -46,7 +46,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         return label
     }()
     
-    private let descriptionLabel: UILabel = {
+    let descriptionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 13.0)
         label.textColor = UIColor(named: "YP_white_color")
@@ -54,7 +54,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         return label
     }()
     
-    private let logoutButton: UIButton = {
+    let logoutButton: UIButton = {
         let button = UIButton.systemButton(
             with: UIImage(named: "Exit") ?? UIImage(),
             target: self,
@@ -159,7 +159,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     }
     
     @objc
-    private func didTapLogoutButton() {
+    func didTapLogoutButton() {
         print("ProfileViewController: didTapLogoutButton")
         presenter?.confirmLogout()
     }
