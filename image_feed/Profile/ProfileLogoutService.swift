@@ -8,12 +8,17 @@
 import Foundation
 import WebKit
 
-final class ProfileLogoutService {
+public protocol ProfileLogoutServiceProtocol {
+    func logout()
+}
+
+final class ProfileLogoutService: ProfileLogoutServiceProtocol {
     static let shared = ProfileLogoutService()
     
     private init() { }
     
     func logout() {
+        print("ProfileLogoutService: logout started")
         cleanCookies()
         cleanProfileData()
         switchToAuthScreen()
@@ -24,7 +29,9 @@ final class ProfileLogoutService {
         HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
         WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
             records.forEach { record in
-                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {
+                    print("ProfileLogoutService: Removed data for record \(record)")
+                })
             }
         }
     }
@@ -43,5 +50,6 @@ final class ProfileLogoutService {
         guard let window = UIApplication.shared.windows.first else { return }
         let splashViewController = SplashViewController()
         window.rootViewController = splashViewController
+        print("ProfileLogoutService: Switched to Auth Screen")
     }
 }
