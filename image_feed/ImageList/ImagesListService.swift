@@ -7,7 +7,13 @@
 
 import UIKit
 
-final class ImageListService {
+protocol ImagesListServiceProtocol: AnyObject {
+    var photos: [Photo] { get }
+    func fetchPhotosNextPage()
+    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Photo, Error>) -> Void)
+}
+
+final class ImageListService: ImagesListServiceProtocol {
     
     private (set) var photos: [Photo] = []
     private var lastLoadedPage: Int?
