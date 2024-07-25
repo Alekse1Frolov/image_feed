@@ -16,12 +16,22 @@ final class UIBlockingProgressHUD {
     static func show() {
         guard let window = window else { return }
         window.isUserInteractionEnabled = false
+        
+        let overlay = UIView(frame: window.bounds)
+                overlay.backgroundColor = UIColor(white: 0, alpha: 0.5)
+                overlay.accessibilityIdentifier = "ProgressHUD"
+                overlay.isUserInteractionEnabled = false
+        
+        window.addSubview(overlay)
         ProgressHUD.show()
     }
     
     static func dismiss() {
         guard let window = window else { return }
         window.isUserInteractionEnabled = true
+        
+        window.subviews.filter { $0.accessibilityIdentifier == "ProgressHUD" }.forEach { $0.removeFromSuperview() }
+        
         ProgressHUD.dismiss()
     }
 }

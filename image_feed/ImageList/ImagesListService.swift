@@ -44,6 +44,7 @@ final class ImageListService: ImagesListServiceProtocol {
     }
     
     func fetchPhotosNextPage() {
+        
         guard !isFetching else { return }
         
         isFetching = true
@@ -52,6 +53,7 @@ final class ImageListService: ImagesListServiceProtocol {
         
         guard let request = makeFetchPhotoRequest(pageNumber: nextPage) else {
             print("[ImageListService - fetchPhotosNextPage] - error creating request")
+            isFetching = false
             return
         }
         

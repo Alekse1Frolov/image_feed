@@ -148,6 +148,9 @@
                                 </constraints>
                                 <viewLayoutGuide key="contentLayoutGuide" id="CLn-cr-vQy"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="h2T-hS-SLH"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="ScrollView"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <outlet property="delegate" destination="n94-Qy-Sdr" id="D9B-Nr-Wny"/>
                                 </connections>
