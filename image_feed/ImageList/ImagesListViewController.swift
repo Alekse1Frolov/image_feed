@@ -147,10 +147,6 @@ extension ImagesListViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        if indexPath.row + 1 == presenter?.photos.count {
-//            print("willDisplay cell for indexPath: \(indexPath)")
-//            presenter?.willDisplayCell(at: indexPath)
-//        }
         presenter?.willDisplayCell(at: indexPath)
     }
 }
