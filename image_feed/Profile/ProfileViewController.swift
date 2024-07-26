@@ -8,15 +8,19 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
+public protocol ProfileViewControllerProtocol: AnyObject {
+    func updateProfileInfo(name: String, loginName: String, bio: String)
+    func updateAvatarImage(with urlString: String)
+}
+
+final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
     
-    private let profileService = ProfileService.shared
-    private let profileImageService = ProfileImageService.shared
-    private var profileImageServiceObserver: NSObjectProtocol?
+    var presenter: ProfilePresenterProtocol?
+    
     private var gradientLayers: [CAGradientLayer] = []
     private var alertPresenter: AlertPresenter?
     
-    private let avatarImageView: UIImageView = {
+    let avatarImageView: UIImageView = {
         let image = UIImage(systemName: "person.crop.circle.fill")
         let imageView = UIImageView(image: image)
         imageView.layer.cornerRadius = 35
@@ -26,7 +30,7 @@ final class ProfileViewController: UIViewController {
         return imageView
     }()
     
-    private let nameLabel: UILabel = {
+    let nameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 23, weight: .semibold)
         label.textColor = UIColor(named: "YP_white_color")
@@ -34,7 +38,7 @@ final class ProfileViewController: UIViewController {
         return label
     }()
     
-    private let loginLabel: UILabel = {
+    let loginLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 13.0)
         label.textColor = UIColor(named: "YP_gray_color")
@@ -42,7 +46,7 @@ final class ProfileViewController: UIViewController {
         return label
     }()
     
-    private let descriptionLabel: UILabel = {
+    let descriptionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 13.0)
         label.textColor = UIColor(named: "YP_white_color")
@@ -50,7 +54,7 @@ final class ProfileViewController: UIViewController {
         return label
     }()
     
-    private let logoutButton: UIButton = {
+    let logoutButton: UIButton = {
         let button = UIButton.systemButton(
             with: UIImage(named: "Exit") ?? UIImage(),
             target: self,
@@ -58,6 +62,7 @@ final class ProfileViewController: UIViewController {
         )
         button.tintColor = UIColor(named: "YP_red_color")
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.accessibilityIdentifier = "Logout"
         return button
     }()
     
@@ -67,24 +72,13 @@ final class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("ProfileViewController: viewDidLoad")
         addSubViews()
         applyConstraints()
-        updateProfileInfo()
         addGradientLayers()
         
         alertPresenter = AlertPresenter(delegate: self)
-        
-        profileImageServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ProfileImageService.didChangeNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                guard let self = self else { return }
-                self.updateAvatar()
-                self.removeGradientLayers()
-            }
-        updateAvatar()
+        presenter?.viewDidLoad()
     }
     
     private func addSubViews() {
@@ -150,44 +144,24 @@ final class ProfileViewController: UIViewController {
         gradientLayers.removeAll()
     }
     
-    private func updateProfileInfo() {
-        guard let profile = profileService.profile else { return }
-        nameLabel.text = profile.name
-        loginLabel.text = profile.loginName
-        descriptionLabel.text = profile.bio
-        
-        profileImageService.fetchProfileImageURL(username: profile.username) { [weak self] result in
-            switch result {
-            case .success(let imageURL):
-                self?.updateAvatarImage(with: imageURL)
-            case .failure(let error):
-                print("Failed to fetch profile image URL: \(error)")
-            }
-        }
+    func updateProfileInfo(name: String, loginName: String, bio: String) {
+        print("ProfileViewController: updating profile info - Name: \(name), LoginName: \(loginName), Bio: \(bio)")
+        nameLabel.text = name
+        loginLabel.text = loginName
+        descriptionLabel.text = bio
+        removeGradientLayers()
     }
     
-    private func updateAvatarImage(with urlString: String) {
+    func updateAvatarImage(with urlString: String) {
+        print("ProfileViewController: updating avatar image with URL: \(urlString)")
         guard let url = URL(string: urlString) else { return }
-        
         avatarImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
-    }
-    
-    private func updateAvatar() {
-        guard
-            let profileImageURL = ProfileImageService.shared.avatarURL,
-            let url = URL(string: profileImageURL)
-        else { return }
-        
-        avatarImageView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle.fill"))
+        removeGradientLayers()
     }
     
     @objc
-    private func didTapLogoutButton() {
-        alertPresenter?.showTwoOptionsAlert(title: "Пока, пока!",
-                                              message: "Уверены, что хотите выйти?",
-                                              confirmButtonText: "Да",
-                                              cancelButtonText: "Нет") {
-            ProfileLogoutService.shared.logout()
-        }
+    func didTapLogoutButton() {
+        print("ProfileViewController: didTapLogoutButton")
+        presenter?.confirmLogout()
     }
 }

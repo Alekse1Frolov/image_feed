@@ -7,7 +7,13 @@
 
 import Foundation
 
-final class ProfileService {
+public protocol ProfileServiceProtocol {
+    var profile: Profile? { get }
+    func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void)
+    func cleanProfile()
+}
+
+final class ProfileService: ProfileServiceProtocol {
     static let shared = ProfileService()
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
@@ -15,34 +21,6 @@ final class ProfileService {
     private(set) var profile: Profile?
     
     private init() {}
-    
-    struct ProfileResult: Codable {
-        let username: String
-        let firstName: String
-        let lastName: String?
-        let bio: String?
-        
-        enum CodingKeys: String, CodingKey {
-            case username
-            case firstName = "first_name"
-            case lastName = "last_name"
-            case bio
-        }
-    }
-    
-    struct Profile {
-        let name: String
-        let username: String
-        let loginName: String
-        let bio: String
-        
-        init(profileResult: ProfileResult) {
-            self.name = profileResult.firstName + " " + (profileResult.lastName ?? "")
-            self.username = profileResult.username
-            self.loginName = "@\(profileResult.username)"
-            self.bio = profileResult.bio ?? ""
-        }
-    }
     
     func makeProfileRequest(token: String) -> URLRequest? {
         guard let url = URL(string: "https://api.unsplash.com/me") else {

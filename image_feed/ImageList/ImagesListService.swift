@@ -7,7 +7,13 @@
 
 import UIKit
 
-final class ImageListService {
+protocol ImagesListServiceProtocol: AnyObject {
+    var photos: [Photo] { get }
+    func fetchPhotosNextPage()
+    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Photo, Error>) -> Void)
+}
+
+final class ImageListService: ImagesListServiceProtocol {
     
     private (set) var photos: [Photo] = []
     private var lastLoadedPage: Int?
@@ -38,6 +44,7 @@ final class ImageListService {
     }
     
     func fetchPhotosNextPage() {
+        
         guard !isFetching else { return }
         
         isFetching = true
@@ -46,6 +53,7 @@ final class ImageListService {
         
         guard let request = makeFetchPhotoRequest(pageNumber: nextPage) else {
             print("[ImageListService - fetchPhotosNextPage] - error creating request")
+            isFetching = false
             return
         }
         

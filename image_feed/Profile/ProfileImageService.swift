@@ -7,7 +7,14 @@
 
 import Foundation
 
-final class ProfileImageService {
+public protocol ProfileImageServiceProtocol {
+    var avatarURL: String? { get }
+    func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void)
+    func cleanProfileImage()
+}
+
+final class ProfileImageService: ProfileImageServiceProtocol {
+    
     static let shared = ProfileImageService()
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?

@@ -43,6 +43,7 @@ final class AlertPresenter {
         
         alert.addAction(confirmAction)
         alert.addAction(cancelAction)
+        alert.view.accessibilityIdentifier = "TwoOptionsAlert"
         delegate?.present(alert, animated: true)
     }
 }
